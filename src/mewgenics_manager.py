@@ -505,6 +505,13 @@ def _steam_library_paths() -> list[str]:
             "steamapps",
             "libraryfolders.vdf",
         ),
+        os.path.join(
+            str(Path.home()),
+            ".steam",
+            "steam",
+            "steamapps",
+            "libraryfolders.vdf",
+        )
     ]
     libraries: list[str] = []
     for vdf_path in candidates:
