@@ -27,14 +27,16 @@ jobs:
         pip install -r requirements.txt
         pip install pyinstaller
 
-    - name: Build
+    - name: Build (Windows)
+      if: runner.os == 'Windows'
+      run: build.bat
+      shell: cmd
+
+    - name: Build (Linux)
+      if: runner.os == 'Linux'
       run: |
-        if [ "$RUNNER_OS" == "Windows" ]; then
-          build.bat
-        else
-          chmod +x build.sh
-          ./build.sh
-        fi
+        chmod +x build.sh
+        ./build.sh
       shell: bash
 
     - name: Upload artifact
