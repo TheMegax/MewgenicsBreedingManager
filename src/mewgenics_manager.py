@@ -14,6 +14,7 @@ import sqlite3
 import csv
 import json
 import datetime
+import platform
 import lz4.block
 import os
 import math
@@ -154,15 +155,25 @@ def _app_dir() -> str:
 
 # ── Constants ─────────────────────────────────────────────────────────────────
 
+if platform.system() == "Linux":
+    APPDATA_SAVE_DIR = os.path.join(
+        str(Path.home()), ".steam", "steam", "steamapps",
+        "compatdata", "686060", "pfx", "drive_c", "users", "steamuser", "AppData", "Roaming",
+        "Glaiel Games", "Mewgenics",
+    )
+    APPDATA_CONFIG_DIR = os.path.join(
+        str(Path.home()), "MewgenicsBreedingManager"
+    )
+else:
+    APPDATA_SAVE_DIR = os.path.join(
+        os.environ.get("APPDATA", ""),
+        "Glaiel Games", "Mewgenics",
+    )
+    APPDATA_CONFIG_DIR = os.path.join(
+        os.environ.get("APPDATA", str(Path.home())),
+        "MewgenicsBreedingManager",
+    )
 
-APPDATA_SAVE_DIR = os.path.join(
-    os.environ.get("APPDATA", ""),
-    "Glaiel Games", "Mewgenics",
-)
-APPDATA_CONFIG_DIR = os.path.join(
-    os.environ.get("APPDATA", str(Path.home())),
-    "MewgenicsBreedingManager",
-)
 os.makedirs(APPDATA_CONFIG_DIR, exist_ok=True)
 APP_CONFIG_PATH = os.path.join(APPDATA_CONFIG_DIR, "settings.json")
 LOCALES_DIR = os.path.join(_bundle_dir(), "locales")
@@ -12301,6 +12312,10 @@ def main():
     pal.setColor(QPalette.ToolTipBase,     QColor(20,  20,  40))
     pal.setColor(QPalette.ToolTipText,     QColor(220, 220, 230))
     app.setPalette(pal)
+
+    # This may not be necessary but for some goddamned reason it segfaults on my linux system if it isn't there.
+    from PySide6 import QtWidgets
+    QtWidgets.QMessageBox()
 
     if not _GPAK_PATH:
         QMessageBox.information(

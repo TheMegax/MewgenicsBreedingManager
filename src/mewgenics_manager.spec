@@ -31,6 +31,7 @@ exe = EXE(
     a.datas,
     [],
     name='MewgenicsManager',
+    onefile=True,
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
